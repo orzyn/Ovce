@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+    <layer id="terrain">
+        <entity id="big_terrain">
+            <renderComponent x="256" y="256">
+                <sprite active="1">meadow-green</sprite>
+            </renderComponent>
+        </entity>
+    </layer>
+    <layer id="ground">
+        <entity id="cow">
+            <behaviorComponent>game.behaviors::CowBehavior</behaviorComponent>
+            <renderComponent x="200" y="200">
+                <anim atlas="cow-walk" fps="6">cow_walk_up</anim>
+                <anim atlas="cow-walk" fps="6">cow_walk_down</anim>
+                <anim atlas="cow-walk" fps="6">cow_walk_left</anim>
+                <anim atlas="cow-walk" fps="6">cow_walk_right</anim>
+            </renderComponent>
+            <inputComponent>mouse</inputComponent>
+            <!--
+            <physicsComponent>
+                <zone type="circle" radius="20"/>
+            </physicsComponent>
+            -->
+        </entity>
+
+<!--
+        <entity id="finish" x="50" y="50">
+             <renderComponent>
+                <sprite>flag</sprite>
+            </renderComponent>
+            <triggerComponent>
+                <zone type="circle" radius="5"/>
+                <dispatch>finish</dispatch>
+            </triggerComponent>
+        </entity>
+-->
+    </layer>
+</root>
