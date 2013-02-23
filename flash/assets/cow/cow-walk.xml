@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TextureAtlas imagePath="cow-walk.png">
+    <SubTexture name="cow_walk_up0001" x="0" y="0" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="cow_walk_up0002" x="128" y="0" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="cow_walk_up0003" x="256" y="0" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="cow_walk_up0004" x="384" y="0" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+
+    <SubTexture name="cow_walk_left0001" x="0" y="128" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="cow_walk_left0002" x="128" y="128" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="cow_walk_left0003" x="256" y="128" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="cow_walk_left0004" x="384" y="128" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+
+    <SubTexture name="cow_walk_down0001" x="0" y="256" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="cow_walk_down0002" x="128" y="256" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="cow_walk_down0003" x="256" y="256" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="cow_walk_down0004" x="384" y="256" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+
+    <SubTexture name="cow_walk_right0001" x="0" y="384" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="cow_walk_right0002" x="128" y="384" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="cow_walk_right0003" x="256" y="384" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+    <SubTexture name="cow_walk_right0004" x="384" y="384" width="128" height="128" frameX="0" frameY="0" frameWidth="128" frameHeight="128"/>
+</TextureAtlas>
