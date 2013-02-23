@@ -1,0 +1,29 @@
+h1. Ovce
+
+h2. Instalacia
+
+1. stiahni a nainstaluj FlashDevelop (FD) z http://www.flashdevelop.org/
+2. spusti projekt priamo cez subor flash/Ovce.as3proj
+3. spusti pomocou F5 alebo Project->Test Project
+
+h2. Engine
+
+Engine je inspirovany architekturou zalozenou na komponentoch podobne ako v Unity3D.
+Vrstvy, entity a ich komponenty sa definuju cez konfigurak. Maximalny pocet komponent jedneho typu je zatial 1. Opis a stav implementacie komponentov:
+- BaseComponent - [90%] abstraktna trieda obsahujuca start()/update() funkciu, ktore su volane enginom a referenciu na entitu v pripade pristupu k ostatnym komponentom tej istej entity
+- AudioComponent - [0%] bude zabezpecovat manazment zvukov pre entitu
+- BehaviorComponent - [5%] abstraktna trieda pre skriptovanie, ktora bude obsahovat interface pre controller/trigger/collision eventy
+- InputComponent - [0%] abstraktna trieda pre controllery (mouse, touch, keyboard a ine), uvidime mozno sa vyhodi a controllery budu priamo dedene z BaseComponent
+- NavigationComponent - [0%] navigacia/pathfinding
+- PhysicsComponent - [0%] kolizie/pohyb
+- RenderComponent - [90%] zabezpecuje renderovanie sprite-ov (textura) a movieclip-ov (atlas+textura)
+- TriggerComponent - [0%] triggery/zony
+- TouchController - [50%] mouse/touch event handler, zatial dispatchuje len MOUSE_DOWN/TOUCH_BEGIN event priamo do BehaviorComponentu tej istej entity
+
+Engine obsahuje sucasti, ktore su pristupne z kazdej komponenty:
+- Renderer - [30%] zabezpecuje renderovanie entit do vrstiev, manazment kamery a validaciu objektov v hlbke
+- SignalBus - [50%] obsahuje tabulku signalov (eventov), do ktorej sa mozu pridat trigger/collision/custom signaly a tie sa mozu byt dispatchovat + reigstrovat listener
+
+Engine zabezpecuje nasledovnu funkcionalitu:
+- Loop - postupnost krokov volanych zatial v kazdom frejme (v buducnosti sa bude vykonavat podla casu)
+- Vola start (po loade komponenty) a update (v kazdom frejme) pre komponentov
