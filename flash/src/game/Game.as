@@ -24,7 +24,7 @@ package game {
 		}
 		
 		private function init():void {
-			new CowBehavior;
+			CowBehavior;
 			
 			TexturesLoader.loadTexture("meadow-green", Terrain.MeadowImage);
 			TexturesLoader.loadTextureAtlas("cow-walk", Cow.AnimTexture, Cow.AnimData);
