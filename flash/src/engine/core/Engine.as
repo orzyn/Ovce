@@ -125,7 +125,7 @@ package engine.core {
 		}
 
 		private function update():void {
-			loadComponents();
+			loadComponents(); // -1. initialize components which are not loaded yet
 			// 0. update positions (physics / navigation)
 			// 1. check collisions (physics / trigger)
 			executeBehaviors(); // 2. exec behaviors (behavior)
