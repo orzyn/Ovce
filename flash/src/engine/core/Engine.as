@@ -16,12 +16,15 @@ package engine.core {
 	 * @author hlavko
 	 */
 	public class Engine {
+		
+		private var _renderer:Renderer;
+		private var _bus:SignalBus;
 
 		private var _entities:Vector.<Entity>;
 		private var _behaviors:Vector.<BehaviorComponent>;
-		private var _inputs:Vector.<InputComponent>;
-		private var _renderer:Renderer;
-		private var _bus:SignalBus;
+		private var _inputs:Vector.<InputComponent>;		
+		
+		private var _notLoadedComponents:Vector.<BaseComponent>;
 		
 		//////////////////////////////////////////////////
 		// INITIALIZATION
@@ -43,6 +46,8 @@ package engine.core {
 		//////////////////////////////////////////////////
 		
 		public function loadScene(sceneClass:Class):void {
+			_notLoadedComponents = new Vector.<BaseComponent>();
+			
 			_entities = new Vector.<Entity>();
 			_behaviors = new Vector.<BehaviorComponent>();
 			_inputs = new Vector.<InputComponent>();
@@ -77,19 +82,23 @@ package engine.core {
 		}
 		
 		private function addRenderComponent(component:RenderComponent, layer:String):void {
-			if (component != null)
+			if (component != null){
 				_renderer.addComponentToLayer(component, layer);
+				_notLoadedComponents.push(component);
+			}
 		}
 		
 		private function addBehaviorComponent(component:BehaviorComponent):void {
-			if (component != null)
+			if (component != null){
 				_behaviors.push(component);
+				_notLoadedComponents.push(component);
+			}
 		}
 		
 		private function addInputComponent(component:InputComponent):void {
 			if (component != null) {
-				component.load(_bus, _renderer);
 				_inputs.push(component);
+				_notLoadedComponents.push(component);
 			}
 		}
 		
@@ -116,6 +125,7 @@ package engine.core {
 		}
 
 		private function update():void {
+			loadComponents();
 			// 0. update positions (physics / navigation)
 			// 1. check collisions (physics / trigger)
 			executeBehaviors(); // 2. exec behaviors (behavior)
@@ -123,14 +133,19 @@ package engine.core {
 			// 4. play audio (audio)
 		}
 		
+		private function loadComponents():void {
+			var len:int = _notLoadedComponents.length;
+			for (var i:int = 0; i < len; i++)
+				if (!_notLoadedComponents[i].loaded)
+					_notLoadedComponents[i].load(_bus, _renderer);
+					
+			_notLoadedComponents.splice(0, len);
+		}
+		
 		private function executeBehaviors():void {
 			var len:int = _behaviors.length;
-			for (var i:int = 0; i < len; i++){
-				if (!_behaviors[i].loaded)
-					_behaviors[i].load(_bus, _renderer);
-				else
-					_behaviors[i].update();
-			}
+			for (var i:int = 0; i < len; i++)
+				_behaviors[i].update();
 		}
 
 	}
