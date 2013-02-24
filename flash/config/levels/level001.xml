@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <root>
     <layer id="terrain">
-        <entity id="big_terrain">
-            <renderComponent x="256" y="256">
+        <entity id="big_terrain" x="256" y="256">
+            <renderComponent>
                 <sprite active="1">meadow-green</sprite>
             </renderComponent>
         </entity>
     </layer>
     <layer id="ground">
-        <entity id="cow">
+        <entity id="cow" x="200" y="200">
             <behaviorComponent>game.behaviors::CowBehavior</behaviorComponent>
-            <renderComponent x="200" y="200">
+            <renderComponent>
                 <anim atlas="cow-walk" fps="6">cow_walk_up</anim>
                 <anim atlas="cow-walk" fps="6">cow_walk_down</anim>
                 <anim atlas="cow-walk" fps="6">cow_walk_left</anim>
                 <anim atlas="cow-walk" fps="6">cow_walk_right</anim>
             </renderComponent>
             <inputComponent>mouse</inputComponent>
-            <!--
             <physicsComponent>
-                <zone type="circle" radius="20"/>
+                <velocity>2</velocity> <!-- pixels per frame -->
+                <collider type="circle" radius="20"/>
             </physicsComponent>
-            -->
+            <navigationComponent>direct</navigationComponent>
         </entity>
 
 <!--

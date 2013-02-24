@@ -7,7 +7,6 @@ package engine.zones {
 	public class Zone {
 
 		public function Zone() {
-
 		}
 
 	}

@@ -10,8 +10,8 @@ package engine.core {
 
 		private var _id:String;
 		private var _layer:String;
-		private var _x:int;
-		private var _y:int;
+		private var _x:Number;
+		private var _y:Number;
 
 		private var _components:Vector.<BaseComponent>;
 
@@ -55,13 +55,18 @@ package engine.core {
 			return _layer;
 		}
 
-		public function get x():int {
+		public function get x():Number {
 			return _x;
 		}
 
-		public function get y():int {
+		public function get y():Number {
 			return _y;
-		}		
+		}
+		
+		public function moveTo(x:Number, y:Number):void {
+			_x = x;
+			_y = y;
+		}
 
 	}
 

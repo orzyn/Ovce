@@ -1,4 +1,5 @@
 package engine.zones {
+	import flash.geom.Rectangle;
 
 	/**
 	 * ...
@@ -6,9 +7,19 @@ package engine.zones {
 	 */
 	public class RectZone extends Zone {
 
-		public function RectZone() {
-			super();
+		private var _rect:Rectangle;
 
+		public function RectZone(rect:Rectangle) {
+			super();
+			_rect = rect;
+		}
+
+		public function get rect():Rectangle {
+			return _rect;
+		}
+
+		public function set rect(value:Rectangle):void {
+			_rect = value;
 		}
 
 	}

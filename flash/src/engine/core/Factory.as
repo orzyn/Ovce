@@ -2,10 +2,15 @@ package engine.core {
 	
 	import engine.components.BehaviorComponent;
 	import engine.components.InputComponent;
+	import engine.components.NavigationComponent;
 	import engine.components.PhysicsComponent;
 	import engine.components.RenderComponent;
 	import engine.components.TriggerComponent;
 	import engine.controllers.TouchController;
+	import engine.zones.RadialZone;
+	import engine.zones.RectZone;
+	import engine.zones.Zone;
+	import flash.geom.Rectangle;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	import game.behaviors.*;
@@ -18,6 +23,7 @@ package engine.core {
 
 		static public function createEntity(xml:XML, layer:String):Entity {
 			var entity:Entity = new Entity(String(xml.@id), layer);
+			entity.moveTo(Number(xml.@x), Number(xml.@y));
 			
 			var comp:XML;
 			for each(comp in xml.renderComponent) {
@@ -41,11 +47,15 @@ package engine.core {
 				entity.attachComponent(createTriggerComponent(comp));
 			}
 			
+			for each(comp in xml.navigationComponent[0]) {
+				entity.attachComponent(createNavigationComponent(comp));
+			}
+			
 			return entity;
 		}
 		
 		static private function createRenderComponent(xml:XML):RenderComponent {
-			var comp:RenderComponent = new RenderComponent(int(xml.@x), int(xml.@y));
+			var comp:RenderComponent = new RenderComponent();
 			
 			var obj:XML;
 			for each (obj in xml.sprite)
@@ -62,7 +72,23 @@ package engine.core {
 		}
 		
 		static private function createPhysicsComponent(xml:XML):PhysicsComponent {
-			return null;
+			var comp:PhysicsComponent = new PhysicsComponent();
+			comp.velocity = Number(xml.velocity);
+			
+			var zone:Zone;
+			switch(xml.collider.@type) {
+				case "circle":
+					zone = new RadialZone(Number(xml.collider.@radius));
+					break;
+				
+				case "rect":
+					zone = new RectZone(new Rectangle(Number(xml.collider.@x), Number(xml.collider.@y), Number(xml.collider.@width), Number(xml.collider.@height)));
+					break;
+			}
+			
+			comp.collider = zone;
+			
+			return comp;
 		}
 		static private function createInputComponent(type:String):InputComponent {
 			if (type == "touch" || type == "mouse") {
@@ -70,7 +96,15 @@ package engine.core {
 			}
 			return null;
 		}
+		
 		static private function createTriggerComponent(xml:XML):TriggerComponent {
+			return null;
+		}
+		
+		static private function createNavigationComponent(type:String):NavigationComponent {
+			if (type == "direct"){
+				return new NavigationComponent();
+			}
 			return null;
 		}
 

@@ -28,6 +28,14 @@ package engine.render {
 		public function getContainer():Sprite {
 			return _container;
 		}
+		
+		public function update():void {
+			var len:int = _components.length;
+			
+			for (var i:int = 0; i < len; i++) {
+				_components[i].update();
+			}
+		}
 
 		public function get components():Vector.<RenderComponent> {
 			return _components;

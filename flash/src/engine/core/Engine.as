@@ -3,6 +3,8 @@ package engine.core {
 	import engine.components.BaseComponent;
 	import engine.components.BehaviorComponent;
 	import engine.components.InputComponent;
+	import engine.components.NavigationComponent;
+	import engine.components.PhysicsComponent;
 	import engine.components.RenderComponent;
 	import engine.loaders.SceneLoader;
 	import engine.render.Renderer;
@@ -22,7 +24,9 @@ package engine.core {
 
 		private var _entities:Vector.<Entity>;
 		private var _behaviors:Vector.<BehaviorComponent>;
-		private var _inputs:Vector.<InputComponent>;		
+		private var _inputs:Vector.<InputComponent>;	
+		private var _physics:Vector.<PhysicsComponent>;
+		private var _navigations:Vector.<NavigationComponent>;
 		
 		private var _notLoadedComponents:Vector.<BaseComponent>;
 		
@@ -51,6 +55,8 @@ package engine.core {
 			_entities = new Vector.<Entity>();
 			_behaviors = new Vector.<BehaviorComponent>();
 			_inputs = new Vector.<InputComponent>();
+			_physics = new Vector.<PhysicsComponent>();
+			_navigations = new Vector.<NavigationComponent>();
 		
 			SceneLoader.loadSceneXml(sceneClass);
 			
@@ -77,8 +83,10 @@ package engine.core {
 		
 		private function addEntity(entity:Entity):void {
 			addRenderComponent(entity.getComponentByClass(RenderComponent), entity.layer);
+			addNavigationComponent(entity.getComponentByClass(NavigationComponent));
 			addBehaviorComponent(entity.getComponentByClass(BehaviorComponent));
 			addInputComponent(entity.getComponentByClass(InputComponent));
+			addPhysicsComponent(entity.getComponentByClass(PhysicsComponent));
 		}
 		
 		private function addRenderComponent(component:RenderComponent, layer:String):void {
@@ -102,6 +110,20 @@ package engine.core {
 			}
 		}
 		
+		private function addPhysicsComponent(component:PhysicsComponent):void {
+			if (component != null) {
+				_physics.push(component);
+				_notLoadedComponents.push(component);
+			}
+		}
+		
+		private function addNavigationComponent(component:NavigationComponent):void {
+			if (component != null) {
+				_navigations.push(component);
+				_notLoadedComponents.push(component);
+			}
+		}
+		
 		private function removeEntity(entity:Entity):void {
 			// TODO
 		}
@@ -111,6 +133,14 @@ package engine.core {
 		}
 		
 		private function removeBehaviorComponent():void {
+			// TODO
+		}
+		
+		private function removePhysicsComponent():void {
+			// TODO
+		}
+		
+		private function removeNavigationComponent():void {
 			// TODO
 		}
 		
@@ -126,7 +156,7 @@ package engine.core {
 
 		private function update():void {
 			loadComponents(); // -1. initialize components which are not loaded yet
-			// 0. update positions (physics / navigation)
+			updatePositions(); // 0. update positions (navigation)
 			// 1. check collisions (physics / trigger)
 			executeBehaviors(); // 2. exec behaviors (behavior)
 			_renderer.render(); // 3. render view (render)
@@ -140,6 +170,12 @@ package engine.core {
 					_notLoadedComponents[i].load(_bus, _renderer);
 					
 			_notLoadedComponents.splice(0, len);
+		}
+		
+		private function updatePositions():void {
+			var len:int = _navigations.length;
+			for (var i:int = 0; i < len; i++)
+				_navigations[i].update();
 		}
 		
 		private function executeBehaviors():void {

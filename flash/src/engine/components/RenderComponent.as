@@ -22,13 +22,8 @@ package engine.components {
 
 		private var _display:DisplayObject;
 
-		private var _x:Number;
-		private var _y:Number;
-
-		public function RenderComponent(x:int, y:int) {
+		public function RenderComponent() {
 			super();
-
-			moveTo(x, y);
 
 			_container = new Sprite();
 			_sprites = new Vector.<Image>();
@@ -97,8 +92,6 @@ package engine.components {
 
 						_display = _sprites[i];
 						_container.addChild(_display);
-
-						moveTo(_x, _y);
 					}
 					return;
 				}
@@ -123,8 +116,6 @@ package engine.components {
 						_container.addChild(_display);
 
 						Starling.juggler.add(IAnimatable(_display));
-
-						moveTo(_x, _y);
 					}
 					return MovieClip(_display);
 				}
@@ -132,15 +123,12 @@ package engine.components {
 
 			throw new ComponentError("Unable to set non-existing animation as active.");
 		}
-
-		public function moveTo(x:Number, y:Number):void {
+		
+		override public function update():void {
 			if (_display != null) {
-				_display.x = x;
-				_display.y = y;
+				_display.x = entity.x;
+				_display.y = entity.y;
 			}
-
-			_x = x;
-			_y = y;
 		}
 
 		public function get sprites():Vector.<Image> {
@@ -153,14 +141,6 @@ package engine.components {
 
 		public function get display():DisplayObject {
 			return _display;
-		}
-
-		public function get x():Number {
-			return _x;
-		}
-
-		public function get y():Number {
-			return _y;
 		}
 
 		public function getContainer():Sprite {

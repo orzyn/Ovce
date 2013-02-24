@@ -43,11 +43,19 @@ package engine.render {
 		}
 		
 		public function render():void {
+			validatePositions();
 			updateCamera();
 		}
 		
+		private function validatePositions():void {
+			var layer:Layer;
+			
+			for each(layer in _layers) {
+				layer.update();
+			}
+		}
+		
 		private function updateCamera():void {
-			// TODO - validate position in depth
 			// TODO - camera update
 		}
 

@@ -2,6 +2,7 @@ package game.behaviors {
 	
 	import engine.components.BehaviorComponent;
 	import engine.components.InputComponent;
+	import engine.components.NavigationComponent;
 	import engine.components.RenderComponent;
 	import engine.controllers.TouchController;
 	import flash.geom.Point;
@@ -14,19 +15,21 @@ package game.behaviors {
 	 */
 	public class CowBehavior extends BehaviorComponent {
 		
+		private var navComp:NavigationComponent;
 		private var rComp:RenderComponent;
 		private var controller:TouchController;
 		
 		private var clip:MovieClip;
 		
 		private var _velocity:Number = 1;
-		private var _target:Point;
-
+		
 		public function CowBehavior() {
 			super();
 		}
 		
 		override public function start():void {
+			navComp = entity.getComponentByClass(NavigationComponent);
+			
 			rComp = entity.getComponentByClass(RenderComponent);
 			clip = rComp.setActiveAnimation("cow_walk_down");
 			clip.stop();
@@ -37,10 +40,10 @@ package game.behaviors {
 		}
 		
 		override public function onTouchDown(target:Point):void {
-			_target = target;
+			navComp.goTo(target);
 			
-			var shiftX:int = rComp.x - _target.x;
-			var shiftY:int = rComp.y - _target.y;
+			var shiftX:int = entity.x - navComp.target.x;
+			var shiftY:int = entity.y - navComp.target.y;
 			
 			if (Math.abs(shiftX) > Math.abs(shiftY)) {
 				if (shiftX > 0) {
@@ -64,27 +67,10 @@ package game.behaviors {
 		}
 		
 		override public function update():void {
-			move();
-		}
-		
-		private function move():void {
-			if (_target == null)
-				return;
-
-			var shiftX:int = _target.x - rComp.x;
-			var shiftY:int = _target.y - rComp.y;
-			
-			var distance:int = Math.floor(Math.sqrt(Math.pow(shiftX, 2) + Math.pow(shiftY, 2)));
-			if (distance <= 0) {
+			if (!navComp.moving) {
 				clip.stop();
-				_target = null;
 				return;
 			}
-
-			var unitX:Number = shiftX / distance;
-			var unitY:Number = shiftY / distance;
-
-			rComp.moveTo(rComp.x + unitX, rComp.y + unitY);
 		}
 
 	}
