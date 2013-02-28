@@ -31,7 +31,7 @@ package game.behaviors {
 			navComp = entity.getComponentByClass(NavigationComponent);
 			
 			rComp = entity.getComponentByClass(RenderComponent);
-			clip = rComp.setActiveAnimation("cow_walk_down");
+			clip = rComp.setActiveClip("cow_walk_down");
 			clip.stop();
 			clip.touchable = false;
 			
@@ -47,18 +47,18 @@ package game.behaviors {
 			
 			if (Math.abs(shiftX) > Math.abs(shiftY)) {
 				if (shiftX > 0) {
-					clip = rComp.setActiveAnimation("cow_walk_left");
+					clip = rComp.setActiveClip("cow_walk_left");
 				}
 				else {
-					clip = rComp.setActiveAnimation("cow_walk_right");
+					clip = rComp.setActiveClip("cow_walk_right");
 				}
 			}
 			else {
 				if (shiftY > 0) {
-					clip = rComp.setActiveAnimation("cow_walk_up");
+					clip = rComp.setActiveClip("cow_walk_up");
 				}
 				else {
-					clip = rComp.setActiveAnimation("cow_walk_down");
+					clip = rComp.setActiveClip("cow_walk_down");
 				}
 			}
 			

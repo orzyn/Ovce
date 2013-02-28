@@ -17,8 +17,9 @@ package engine.components {
 	public class RenderComponent extends BaseComponent {
 
 		private var _container:Sprite;
-		private var _sprites:Vector.<Image>;
-		private var _animations:Vector.<MovieClip>;
+		
+		private var _images:Vector.<Image>;
+		private var _clips:Vector.<MovieClip>;
 
 		private var _display:DisplayObject;
 
@@ -26,71 +27,75 @@ package engine.components {
 			super();
 
 			_container = new Sprite();
-			_sprites = new Vector.<Image>();
-			_animations = new Vector.<MovieClip>();
+			_images = new Vector.<Image>();
+			_clips = new Vector.<MovieClip>();
 		}
 
-		public function addSprite(template:String, active:Boolean):void {
-			var sprite:Image = new Image(TexturesLoader.getTexture(template));
-			sprite.pivotX = sprite.width >> 1;
-			sprite.pivotY = sprite.height >> 1;
-			sprite.name = template;
-			_sprites.push(sprite);
+		public function saveImage(template:String, active:Boolean):void {
+			var image:Image = new Image(TexturesLoader.getTexture(template));
+			image.pivotX = image.width >> 1;
+			image.pivotY = image.height >> 1;
+			image.name = template;
+			_images.push(image);
 
 			if (active)
-				setActiveSprite(template);
+				setActiveImage(template);
+		}
+		
+		public function addSprite(sprite:Sprite):void {
+			_container.addChild(sprite);
 		}
 
-		public function addAnimation(atlas:String, fps:uint, template:String, active:Boolean):void {
+		public function saveClip(atlas:String, fps:uint, template:String, active:Boolean):void {
 			var clip:MovieClip = new MovieClip(TexturesLoader.getTextureAtlas(atlas).getTextures(template), fps);
 			clip.pivotX = clip.width >> 1;
 			clip.pivotY = clip.height >> 1;
 			clip.name = template;
-			_animations.push(clip);
+			_clips.push(clip);
 
 			if (active)
-				setActiveAnimation(template);
+				setActiveClip(template);
 		}
 
-		public function disposeSprite(template:String):void {
-			var len:int = _sprites.length;
+		public function disposeImage(template:String):void {
+			var len:int = _images.length;
 
 			for (var i:int = 0; i < len; i++) {
-				if (_sprites[i].name == template) {
-					_sprites.splice(i, 1);
+				if (_images[i].name == template) {
+					_images.splice(i, 1);
 					return;
 				}
 			}
 
-			throw new ComponentError("Unable to dispose sprite.");
+			throw new ComponentError("Unable to dispose image.");
 		}
 
-		public function disposeAnimation(template:String):void {
-			var len:int = _animations.length;
+		public function disposeClip(template:String):void {
+			var len:int = _clips.length;
 
 			for (var i:int = 0; i < len; i++) {
-				if (_animations[i].name == template) {
-					_animations.splice(i, 1);
+				if (_clips[i].name == template) {
+					_clips.splice(i, 1);
 					return;
 				}
 			}
 
-			throw new ComponentError("Unable to dispose animation.");
+			throw new ComponentError("Unable to dispose clip.");
 		}
 
-		public function setActiveSprite(template:String):void {
-			var len:int = _sprites.length;
+		public function setActiveImage(template:String):void {
+			var len:int = _images.length;
 
 			for (var i:int = 0; i < len; i++) {
-				if (_sprites[i].name == template) {
-					if (_display != _sprites[i]) {
+				if (_images[i].name == template) {
+					if (_display != _images[i]) {
 						if (_display != null) {
 							if (_display is IAnimatable)
 								Starling.juggler.remove(IAnimatable(_display));
 							_container.removeChild(_display);
 						}
 
-						_display = _sprites[i];
+						_display = _images[i];
 						_container.addChild(_display);
 					}
 					return;
@@ -100,19 +105,19 @@ package engine.components {
 			throw new ComponentError("Unable to set non-existing sprite as active.");
 		}
 
-		public function setActiveAnimation(template:String):MovieClip {
-			var len:int = _animations.length;
+		public function setActiveClip(template:String):MovieClip {
+			var len:int = _clips.length;
 
 			for (var i:int = 0; i < len; i++) {
-				if (_animations[i].name == template) {
-					if (_display != _animations[i]) {
+				if (_clips[i].name == template) {
+					if (_display != _clips[i]) {
 						if (_display != null) {
 							if (_display is IAnimatable)
 								Starling.juggler.remove(IAnimatable(_display));
 							_container.removeChild(_display);
 						}
 
-						_display = _animations[i];						
+						_display = _clips[i];						
 						_container.addChild(_display);
 
 						Starling.juggler.add(IAnimatable(_display));
@@ -131,12 +136,12 @@ package engine.components {
 			}
 		}
 
-		public function get sprites():Vector.<Image> {
-			return _sprites;
+		public function get images():Vector.<Image> {
+			return _images;
 		}
 
-		public function get animations():Vector.<MovieClip> {
-			return _animations;
+		public function get clips():Vector.<MovieClip> {
+			return _clips;
 		}
 
 		public function get display():DisplayObject {

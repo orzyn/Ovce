@@ -59,10 +59,10 @@ package engine.core {
 			
 			var obj:XML;
 			for each (obj in xml.sprite)
-				comp.addSprite(obj, Boolean(int(obj.@active)));
+				comp.saveImage(obj, Boolean(int(obj.@active)));
 			
 			for each (obj in xml.anim)
-				comp.addAnimation(String(obj.@atlas), int(obj.@fps), String(obj), Boolean(int(obj.@active)));
+				comp.saveClip(String(obj.@atlas), int(obj.@fps), String(obj), Boolean(int(obj.@active)));
 			
 			return comp;
 		}
