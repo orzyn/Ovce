@@ -27,7 +27,7 @@ package engine.components {
 
 			var shiftX:int = _target.x - entity.x;
 			var shiftY:int = _target.y - entity.y;
-
+			
 			_distance = Math.floor(Math.sqrt(Math.pow(shiftX, 2) + Math.pow(shiftY, 2)));
 
 			if (_distance > 0) {

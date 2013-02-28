@@ -5,6 +5,7 @@ package game.behaviors {
 	import engine.components.NavigationComponent;
 	import engine.components.RenderComponent;
 	import engine.controllers.TouchController;
+	import engine.render.camera.LockCamera;
 	import flash.geom.Point;
 	import starling.display.MovieClip;
 	import starling.events.Touch;
@@ -37,10 +38,14 @@ package game.behaviors {
 			
 			controller = entity.getComponentByClass(TouchController);
 			controller.onTouchDown.add(onTouchDown);
+			
+			var cameraAnchor:Point = new Point(renderer.canvas.stage.stageWidth >> 1, renderer.canvas.stage.stageHeight >> 1);
+			renderer.camera = new LockCamera(entity, "lockCamera", cameraAnchor);
 		}
 		
 		override public function onTouchDown(target:Point):void {
-			navComp.goTo(target);
+			var gotoPoint:Point = new Point(entity.x + target.x - (renderer.canvas.stage.stageWidth >> 1), entity.y + target.y - (renderer.canvas.stage.stageHeight >> 1));
+			navComp.goTo(gotoPoint);
 			
 			var shiftX:int = entity.x - navComp.target.x;
 			var shiftY:int = entity.y - navComp.target.y;

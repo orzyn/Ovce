@@ -4,6 +4,7 @@ package game {
 	import engine.core.Engine;
 	import engine.loaders.SceneLoader;
 	import engine.loaders.TexturesLoader;
+	import engine.render.camera.LockCamera;
 	import game.assets.Cow;
 	import game.assets.Terrain;
 	import game.behaviors.CowBehavior;
