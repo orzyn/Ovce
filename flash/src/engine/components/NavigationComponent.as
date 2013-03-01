@@ -1,5 +1,6 @@
 package engine.components {
 	import flash.geom.Point;
+	import nape.geom.Vec2;
 
 	/**
 	 * ...
@@ -8,60 +9,53 @@ package engine.components {
 	public class NavigationComponent extends BaseComponent {
 
 		private var _phComp:PhysicsComponent;
-		
-		private var _distance:Number;
-		private var _target:Point;
+		private var _renderComp:RenderComponent;
 		private var _moving:Boolean;
+		private var _target:Point;
 
 		public function NavigationComponent() {
 			super();
 		}
-		
+
 		override public function start():void {
 			_phComp = entity.getComponentByClass(PhysicsComponent);
+			_renderComp = entity.getComponentByClass(RenderComponent);
 		}
 
 		override public function update():void {
 			if (!_moving)
+				
 				return;
-
-			var shiftX:int = _target.x - entity.x;
-			var shiftY:int = _target.y - entity.y;
-			
-			_distance = Math.floor(Math.sqrt(Math.pow(shiftX, 2) + Math.pow(shiftY, 2)));
-
-			if (_distance > 0) {
-				if (_phComp.velocity <= _distance){
-					var unitX:Number = (shiftX / _distance) * _phComp.velocity;
-					var unitY:Number = (shiftY / _distance) * _phComp.velocity;
-
-					entity.moveTo(entity.x + unitX, entity.y + unitY);
-				}
-				else {
-					entity.moveTo(_target.x, _target.y);
-				}
-			} else
+			if (distance > 2) {
+				entity.moveTo(_phComp.body.position.x, _phComp.body.position.y);
+			}
+			else {
+				_phComp.body.velocity = new Vec2(0, 0);
 				_moving = false;
+			}
 		}
-		
+
 		public function goTo(targetPoint:Point):void {
 			_target = targetPoint;
-			_moving = true;
-		}
 
-		public function get target():Point {
-			return _target;
+			_phComp.body.velocity = new Vec2(_target.x - entity.x, _target.y - entity.y).normalise().mul(_phComp.speed);
+
+			_moving = true;
 		}
 
 		public function get distance():Number {
 			if (_target == null)
 				return 0;
 
-			return _distance;
+			return _target.subtract(new Point(entity.x, entity.y)).length;
 		}
 
 		public function get moving():Boolean {
 			return _moving;
+		}
+
+		public function get target():Point {
+			return _target;
 		}
 
 	}

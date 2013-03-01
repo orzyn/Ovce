@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <root>
+    <physics>
+        <gravity x="0" y="0"/>
+    </physics>
     <layer id="terrain">
         <entity id="big_terrain" x="256" y="256">
             <renderComponent>
-                <sprite active="1">meadow-green</sprite>
+                <image active="1">meadow-green</image>
             </renderComponent>
         </entity>
     </layer>
@@ -11,17 +14,28 @@
         <entity id="cow" x="200" y="200">
             <behaviorComponent>game.behaviors::CowBehavior</behaviorComponent>
             <renderComponent>
-                <anim atlas="cow-walk" fps="6">cow_walk_up</anim>
-                <anim atlas="cow-walk" fps="6">cow_walk_down</anim>
-                <anim atlas="cow-walk" fps="6">cow_walk_left</anim>
-                <anim atlas="cow-walk" fps="6">cow_walk_right</anim>
+                <clip atlas="cow-walk" fps="6">cow_walk_up</clip>
+                <clip atlas="cow-walk" fps="6">cow_walk_down</clip>
+                <clip atlas="cow-walk" fps="6">cow_walk_left</clip>
+                <clip atlas="cow-walk" fps="6">cow_walk_right</clip>
             </renderComponent>
             <inputComponent>mouse</inputComponent>
             <physicsComponent>
-                <velocity>2</velocity> <!-- pixels per frame -->
-                <collider type="circle" radius="20"/>
+                <type>dynamic</type>
+                <speed>100</speed> <!-- pixels per second -->
+                <shape type="box" width="25" height="25"/>
             </physicsComponent>
             <navigationComponent>direct</navigationComponent>
+        </entity>
+
+        <entity id="boulder" x="300" y="300">
+            <renderComponent>
+                <image active="1">boulder</image>
+            </renderComponent>
+            <physicsComponent>
+                <type>kinematic</type>
+                <shape type="circle" radius="16"/>
+            </physicsComponent>
         </entity>
 
 <!--

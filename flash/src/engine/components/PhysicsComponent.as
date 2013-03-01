@@ -1,5 +1,13 @@
 package engine.components {
+
+	import engine.physics.PhysicsFactory;
 	import engine.zones.Zone;
+	import nape.callbacks.CbEvent;
+	import nape.callbacks.InteractionCallback;
+	import nape.callbacks.InteractionListener;
+	import nape.callbacks.InteractionType;
+	import nape.phys.Body;
+	import nape.shape.Shape;
 
 	/**
 	 * ...
@@ -7,27 +15,44 @@ package engine.components {
 	 */
 	public class PhysicsComponent extends BaseComponent {
 
-		private var _velocity:Number;
-		private var _collider:Zone;
+		private var _body:Body;
+		private var _speed:Number = 0;
 
-		public function PhysicsComponent() {
+		public function PhysicsComponent(body:Body) {
 			super();
+			_body = body;
+			_body.allowRotation = false;
 		}
 
-		public function get velocity():Number {
-			return _velocity;
+		override public function start():void {
+			body.position.setxy(entity.x, entity.y);
+			//_body.
+			//_body.space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.COLLISION, "", "", onCollisionHandler));
 		}
 
-		public function set velocity(value:Number):void {
-			_velocity = value;
+		private function onCollisionHandler(interactionCallback:InteractionCallback):void {
+			//interactionCallback.
 		}
 
-		public function get collider():Zone {
-			return _collider;
+		public function addShape(shape:Shape):void {
+			_body.shapes.add(shape);
 		}
 
-		public function set collider(value:Zone):void {
-			_collider = value;
+		public function moveTo(x:Number, y:Number):void {
+			_body.position.x = x;
+			_body.position.y = y;
+		}
+
+		public function get body():Body {
+			return _body;
+		}
+
+		public function get speed():Number {
+			return _speed;
+		}
+
+		public function set speed(value:Number):void {
+			_speed = value;
 		}
 
 	}

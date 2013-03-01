@@ -32,9 +32,20 @@ package engine.render {
 		public function update():void {
 			var len:int = _components.length;
 
-			for (var i:int = 0; i < len; i++) {
+			for (var i:int = 0; i < len; i++)
 				_components[i].update();
-			}
+				
+			_components.sort(sortFunction);
+			
+			for (i = len - 1; i >= 0; i--)
+				_container.setChildIndex(_components[i].getContainer(), i);
+		}
+		
+		private function sortFunction(first:RenderComponent, second:RenderComponent):Number {
+			if (first.entity.y > second.entity.y)
+				return 1;
+			else 
+				return -1;
 		}
 
 		public function get components():Vector.<RenderComponent> {

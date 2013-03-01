@@ -7,13 +7,14 @@ package engine.core {
 	import engine.components.RenderComponent;
 	import engine.components.TriggerComponent;
 	import engine.controllers.TouchController;
-	import engine.zones.RadialZone;
-	import engine.zones.RectZone;
+	import engine.physics.PhysicsFactory;
+	import engine.zones.BoxZone;
+	import engine.zones.CircleZone;
 	import engine.zones.Zone;
-	import flash.geom.Rectangle;
 	import flash.utils.getDefinitionByName;
-	import flash.utils.getQualifiedClassName;
 	import game.behaviors.*;
+	import nape.phys.Body;
+	import nape.shape.Shape;
 
 	/**
 	 * ...
@@ -58,10 +59,10 @@ package engine.core {
 			var comp:RenderComponent = new RenderComponent();
 			
 			var obj:XML;
-			for each (obj in xml.sprite)
+			for each (obj in xml.image)
 				comp.saveImage(obj, Boolean(int(obj.@active)));
 			
-			for each (obj in xml.anim)
+			for each (obj in xml.clip)
 				comp.saveClip(String(obj.@atlas), int(obj.@fps), String(obj), Boolean(int(obj.@active)));
 			
 			return comp;
@@ -72,21 +73,13 @@ package engine.core {
 		}
 		
 		static private function createPhysicsComponent(xml:XML):PhysicsComponent {
-			var comp:PhysicsComponent = new PhysicsComponent();
-			comp.velocity = Number(xml.velocity);
+			var body:Body = new Body(PhysicsFactory.createBodyType(xml.type))
+			var comp:PhysicsComponent = new PhysicsComponent(body);
 			
-			var zone:Zone;
-			switch(xml.collider.@type) {
-				case "circle":
-					zone = new RadialZone(Number(xml.collider.@radius));
-					break;
-				
-				case "rect":
-					zone = new RectZone(new Rectangle(Number(xml.collider.@x), Number(xml.collider.@y), Number(xml.collider.@width), Number(xml.collider.@height)));
-					break;
-			}
+			var shape:Shape = PhysicsFactory.createShape(XML(xml.shape));
+			comp.addShape(shape);
 			
-			comp.collider = zone;
+			comp.speed = Number(xml.speed);
 			
 			return comp;
 		}

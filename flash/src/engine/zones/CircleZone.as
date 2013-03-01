@@ -4,12 +4,12 @@ package engine.zones {
 	 * ...
 	 * @author hlavko
 	 */
-	public class RadialZone extends Zone {
+	public class CircleZone extends Zone {
 
 		private var _radius:Number;
 
-		public function RadialZone(radius:Number) {
-			super();
+		public function CircleZone(radius:Number) {
+			super(CIRCLE);
 			_radius = radius;
 		}
 

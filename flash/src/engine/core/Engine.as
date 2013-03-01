@@ -9,7 +9,13 @@ package engine.core {
 	import engine.loaders.SceneLoader;
 	import engine.render.Renderer;
 	import engine.core.SignalBus;
+	import flash.display.MovieClip;
+	import nape.geom.Vec2;
+	import nape.space.Space;
+	import nape.util.Debug;
+	import nape.util.ShapeDebug;
 	import org.osflash.signals.Signal;
+	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
 
@@ -21,6 +27,9 @@ package engine.core {
 
 		private var _renderer:Renderer;
 		private var _bus:SignalBus;
+		private var _space:Space;
+		
+		private var _debug:Debug;
 
 		private var _entities:Vector.<Entity>;
 		private var _behaviors:Vector.<BehaviorComponent>;
@@ -43,6 +52,17 @@ package engine.core {
 			_bus.addSignal("onSceneStartup", Signal);
 
 			_renderer = new Renderer(canvas);
+			_space = new Space();
+			
+			initPhysicsDebug();
+		}
+		
+		private function initPhysicsDebug():void {
+			_debug = new ShapeDebug(800, 480, 0x33333333);
+			var mcDebug:MovieClip = new MovieClip();
+			mcDebug.addChild(_debug.display);
+			Starling.current.nativeOverlay.addChild(mcDebug);
+			_renderer.mcPhysicsDebug = mcDebug;
 		}
 
 		//////////////////////////////////////////////////
@@ -60,8 +80,13 @@ package engine.core {
 
 			SceneLoader.loadSceneXml(sceneClass);
 
+			loadPhysics();
 			loadLayers();
 			loadEntities();
+		}
+		
+		private function loadPhysics():void {
+			_space.gravity = Vec2.fromPoint(SceneLoader.loadGravity());
 		}
 
 		private function loadLayers():void {
@@ -114,6 +139,7 @@ package engine.core {
 			if (component != null) {
 				_physics.push(component);
 				_notLoadedComponents.push(component);
+				component.body.space = _space;
 			}
 		}
 
@@ -155,12 +181,13 @@ package engine.core {
 		}
 
 		private function update():void {
-			loadComponents(); // -1. initialize components which are not loaded yet
-			updatePositions(); // 0. update positions (navigation)
-			// 1. check collisions (physics / trigger)
-			executeBehaviors(); // 2. exec behaviors (behavior)
-			_renderer.render(); // 3. render view (render)
-			// 4. play audio (audio)
+			loadComponents(); // 0. initialize components which are not loaded yet
+			updatePhysics(); // 1. check collisions (physics)
+			// 2. trigger collisions
+			validatePositions(); // 3. apply physics coords to rendering
+			executeBehaviors(); // 4. exec behaviors (behavior)
+			render(); // 5. render view (render)
+			// 6. play audio (audio)
 		}
 
 		private function loadComponents():void {
@@ -172,8 +199,16 @@ package engine.core {
 
 			_notLoadedComponents.splice(0, len);
 		}
+		
+		private function updatePhysics():void {
+			_space.step(0.017);
 
-		private function updatePositions():void {
+			_debug.clear();
+			_debug.draw(_space);
+			_debug.flush();
+		}
+		
+		private function validatePositions():void {
 			var len:int = _navigations.length;
 
 			for (var i:int = 0; i < len; i++)
@@ -185,6 +220,10 @@ package engine.core {
 
 			for (var i:int = 0; i < len; i++)
 				_behaviors[i].update();
+		}
+		
+		private function render():void {
+			_renderer.render(); 
 		}
 
 		//////////////////////////////////////////////////

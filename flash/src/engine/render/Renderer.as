@@ -4,6 +4,7 @@ package engine.render {
 	import engine.core.Entity;
 	import engine.loaders.SceneLoader;
 	import engine.render.camera.ICamera;
+	import flash.display.MovieClip;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	import starling.display.Sprite;
@@ -17,6 +18,8 @@ package engine.render {
 		private var _canvas:Sprite;
 		private var _layers:Dictionary;
 		private var _camera:ICamera;
+
+		private var _mcPhysicsDebug:MovieClip;
 
 		public function Renderer(canvas:Sprite) {
 			_canvas = canvas;
@@ -56,19 +59,24 @@ package engine.render {
 		}
 
 		private function updateCamera():void {
-			if (_camera != null){
+			if (_camera != null) {
 				camera.update();
-				
+
 				if (camera.isInvalidated()) {
 					var layer:Layer;
 					var container:Sprite;
 					var anchor:Point;
-					
+
 					for each (layer in _layers) {
 						container = layer.getContainer();
 						anchor = camera.anchorPoint;
 						container.x = anchor.x - camera.x;
 						container.y = anchor.y - camera.y;
+					}
+
+					if (_mcPhysicsDebug != null) {
+						_mcPhysicsDebug.x = anchor.x - camera.x;
+						_mcPhysicsDebug.y = anchor.y - camera.y;
 					}
 				}
 			}
@@ -84,6 +92,10 @@ package engine.render {
 
 		public function get canvas():Sprite {
 			return _canvas;
+		}
+
+		public function set mcPhysicsDebug(value:MovieClip):void {
+			_mcPhysicsDebug = value;
 		}
 
 	}

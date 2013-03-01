@@ -5,6 +5,7 @@ package game {
 	import engine.loaders.SceneLoader;
 	import engine.loaders.TexturesLoader;
 	import engine.render.camera.LockCamera;
+	import game.assets.Boulder;
 	import game.assets.Cow;
 	import game.assets.Terrain;
 	import game.behaviors.CowBehavior;
@@ -28,6 +29,8 @@ package game {
 			CowBehavior;
 			
 			TexturesLoader.loadTexture("meadow-green", Terrain.MeadowImage);
+			TexturesLoader.loadTexture("boulder", Boulder.BoulderImage);
+			
 			TexturesLoader.loadTextureAtlas("cow-walk", Cow.AnimTexture, Cow.AnimData);
 			
 			_engine = new Engine(this);

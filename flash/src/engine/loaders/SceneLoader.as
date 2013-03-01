@@ -2,6 +2,7 @@ package engine.loaders {
 	import engine.core.Entity;
 	import engine.core.Factory;
 	import engine.render.Layer;
+	import flash.geom.Point;
 	import flash.utils.ByteArray;
 
 	/**
@@ -14,6 +15,10 @@ package engine.loaders {
 		
 		static public function loadSceneXml(sceneClass:Class):void {
 			_xml = XML(new sceneClass());
+		}
+		
+		static public function loadGravity():Point {
+			return new Point(int(_xml.physics.gravity.@x), int(_xml.physics.gravity.@y));
 		}
 		
 		static public function loadLayerNames():Vector.<String> {
