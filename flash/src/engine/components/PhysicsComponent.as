@@ -28,10 +28,6 @@ package engine.components {
 			_body.position.setxy(entity.x, entity.y);
 		}
 
-		private function onCollisionHandler(interactionCallback:InteractionCallback):void {
-			//interactionCallback.
-		}
-
 		public function addShape(shape:Shape):void {
 			_body.shapes.add(shape);
 		}

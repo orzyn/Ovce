@@ -206,7 +206,7 @@ package engine.core {
 			validatePositions(); // 3. apply physics coords to rendering
 			executeBehaviors(); // 4. exec behaviors (behavior)
 			render(); // 5. render view (render)
-			// 6. play audio (audio)
+			// TODO - 6. play audio (audio)
 		}
 
 		private function loadComponents():void {

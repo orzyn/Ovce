@@ -24,8 +24,8 @@ package engine.components {
 
 		override public function update():void {
 			if (!_moving)
-				
 				return;
+				
 			if (distance > 2) {
 				entity.moveTo(_phComp.body.position.x, _phComp.body.position.y);
 			}

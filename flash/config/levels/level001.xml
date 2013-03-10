@@ -36,7 +36,7 @@
                 <image active="1">boulder</image>
             </renderComponent>
             <physicsComponent>
-                <type>kinematic</type>
+                <type>static</type>
                 <shape type="circle" radius="16"/>
             </physicsComponent>
         </entity>
