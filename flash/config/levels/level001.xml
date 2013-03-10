@@ -25,6 +25,9 @@
                 <speed>100</speed> <!-- pixels per second -->
                 <shape type="box" width="25" height="25"/>
             </physicsComponent>
+            <zoneComponent>
+                <zone type="circle" radius="40"/>
+            </zoneComponent>
             <navigationComponent>direct</navigationComponent>
         </entity>
 
@@ -38,16 +41,23 @@
             </physicsComponent>
         </entity>
 
-<!--
-        <entity id="finish" x="50" y="50">
+        <entity id="flag" x="50" y="50">
              <renderComponent>
-                <sprite>flag</sprite>
+                <image active="1">finish</image>
             </renderComponent>
-            <triggerComponent>
-                <zone type="circle" radius="5"/>
-                <dispatch>finish</dispatch>
-            </triggerComponent>
+            <zoneComponent>
+                <zone type="circle" radius="20"/>
+            </zoneComponent>
         </entity>
--->
+
     </layer>
+
+    <triggers>
+        <trigger>
+            <zone>cow</zone>
+            <zone>flag</zone>
+            <signal>onTriggerFinish</signal>
+        </trigger>
+    </triggers>
+
 </root>

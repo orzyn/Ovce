@@ -1,12 +1,10 @@
 package game {
 	
-	import engine.core.Entity;
 	import engine.core.Engine;
-	import engine.loaders.SceneLoader;
 	import engine.loaders.TexturesLoader;
-	import engine.render.camera.LockCamera;
 	import game.assets.Boulder;
 	import game.assets.Cow;
+	import game.assets.Flag;
 	import game.assets.Terrain;
 	import game.behaviors.CowBehavior;
 	import game.levels.Level;
@@ -30,6 +28,7 @@ package game {
 			
 			TexturesLoader.loadTexture("meadow-green", Terrain.MeadowImage);
 			TexturesLoader.loadTexture("boulder", Boulder.BoulderImage);
+			TexturesLoader.loadTexture("finish", Flag.FinishFlagImage);
 			
 			TexturesLoader.loadTextureAtlas("cow-walk", Cow.AnimTexture, Cow.AnimData);
 			

@@ -42,6 +42,13 @@ package engine.components {
 
 			_moving = true;
 		}
+		
+		public function stop():void {
+			_moving = false;
+			
+			_target.x = entity.x;
+			_target.y = entity.y;
+		}
 
 		public function get distance():Number {
 			if (_target == null)

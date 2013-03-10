@@ -25,9 +25,7 @@ package engine.components {
 		}
 
 		override public function start():void {
-			body.position.setxy(entity.x, entity.y);
-			//_body.
-			//_body.space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.COLLISION, "", "", onCollisionHandler));
+			_body.position.setxy(entity.x, entity.y);
 		}
 
 		private function onCollisionHandler(interactionCallback:InteractionCallback):void {

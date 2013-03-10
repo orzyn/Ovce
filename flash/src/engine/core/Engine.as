@@ -6,9 +6,12 @@ package engine.core {
 	import engine.components.NavigationComponent;
 	import engine.components.PhysicsComponent;
 	import engine.components.RenderComponent;
+	import engine.components.ZoneComponent;
 	import engine.loaders.SceneLoader;
 	import engine.render.Renderer;
 	import engine.core.SignalBus;
+	import engine.signals.TriggerSignal;
+	import engine.trigger.Trigger;
 	import flash.display.MovieClip;
 	import nape.geom.Vec2;
 	import nape.space.Space;
@@ -28,6 +31,7 @@ package engine.core {
 		private var _renderer:Renderer;
 		private var _bus:SignalBus;
 		private var _space:Space;
+		private var _triggers:Vector.<Trigger>;
 		
 		private var _debug:Debug;
 
@@ -36,6 +40,7 @@ package engine.core {
 		private var _inputs:Vector.<InputComponent>;
 		private var _physics:Vector.<PhysicsComponent>;
 		private var _navigations:Vector.<NavigationComponent>;
+		private var _zones:Vector.<ZoneComponent>;
 
 		private var _notLoadedComponents:Vector.<BaseComponent>;
 
@@ -77,12 +82,14 @@ package engine.core {
 			_inputs = new Vector.<InputComponent>();
 			_physics = new Vector.<PhysicsComponent>();
 			_navigations = new Vector.<NavigationComponent>();
+			_zones = new Vector.<ZoneComponent>();
 
 			SceneLoader.loadSceneXml(sceneClass);
 
 			loadPhysics();
 			loadLayers();
 			loadEntities();
+			loadTriggers();
 		}
 		
 		private function loadPhysics():void {
@@ -101,12 +108,24 @@ package engine.core {
 				addEntity(entities[i]);
 			}
 		}
+		
+		private function loadTriggers():void {
+			_triggers = SceneLoader.loadTriggers(_entities);
+			
+			var len:int = _triggers.length;
+			
+			for (var i:int = 0; i < len; i++) {
+				_bus.addSignal(_triggers[i].signal, TriggerSignal);
+			}
+		}
 
 		//////////////////////////////////////////////////
 		// ENTITIES AND COMPONENTS MANAGEMENT
 		//////////////////////////////////////////////////
 
 		private function addEntity(entity:Entity):void {
+			_entities.push(entity);
+			
 			addRenderComponent(entity.getComponentByClass(RenderComponent), entity.layer);
 			addNavigationComponent(entity.getComponentByClass(NavigationComponent));
 			addBehaviorComponent(entity.getComponentByClass(BehaviorComponent));
@@ -183,7 +202,7 @@ package engine.core {
 		private function update():void {
 			loadComponents(); // 0. initialize components which are not loaded yet
 			updatePhysics(); // 1. check collisions (physics)
-			// 2. trigger collisions
+			checkTriggers(); // 2. trigger collisions
 			validatePositions(); // 3. apply physics coords to rendering
 			executeBehaviors(); // 4. exec behaviors (behavior)
 			render(); // 5. render view (render)
@@ -206,6 +225,16 @@ package engine.core {
 			_debug.clear();
 			_debug.draw(_space);
 			_debug.flush();
+		}
+		
+		private function checkTriggers():void {
+			var len:int = _triggers.length;
+			
+			for (var i:int = 0; i < len; i++){
+				if (!_triggers[i].triggered && _triggers[i].test()) {
+					_bus.dispatchSignal(_triggers[i].signal);
+				}
+			}
 		}
 		
 		private function validatePositions():void {

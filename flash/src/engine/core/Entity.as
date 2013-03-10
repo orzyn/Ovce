@@ -1,6 +1,7 @@
 package engine.core {
 	import engine.components.BaseComponent;
 	import engine.errors.EntityError;
+	import flash.geom.Point;
 
 	/**
 	 * ...
@@ -10,14 +11,15 @@ package engine.core {
 
 		private var _id:String;
 		private var _layer:String;
-		private var _x:Number;
-		private var _y:Number;
+		private var _position:Point;
 
 		private var _components:Vector.<BaseComponent>;
 
 		public function Entity(id:String, layer:String) {
 			_id = id;
 			_layer = layer;
+
+			_position = new Point();
 
 			_components = new Vector.<BaseComponent>();
 		}
@@ -50,22 +52,26 @@ package engine.core {
 		public function get id():String {
 			return _id;
 		}
-		
+
 		public function get layer():String {
 			return _layer;
 		}
 
 		public function get x():Number {
-			return _x;
+			return _position.x;
 		}
 
 		public function get y():Number {
-			return _y;
+			return _position.y;
 		}
-		
+
+		public function get position():Point {
+			return _position;
+		}
+
 		public function moveTo(x:Number, y:Number):void {
-			_x = x;
-			_y = y;
+			_position.x = x;
+			_position.y = y;
 		}
 
 	}

@@ -5,12 +5,11 @@ package engine.core {
 	import engine.components.NavigationComponent;
 	import engine.components.PhysicsComponent;
 	import engine.components.RenderComponent;
-	import engine.components.TriggerComponent;
+	import engine.components.ZoneComponent;
 	import engine.controllers.TouchController;
 	import engine.physics.PhysicsFactory;
-	import engine.zones.BoxZone;
+	import engine.trigger.Trigger;
 	import engine.zones.CircleZone;
-	import engine.zones.Zone;
 	import flash.utils.getDefinitionByName;
 	import game.behaviors.*;
 	import nape.phys.Body;
@@ -44,8 +43,8 @@ package engine.core {
 				entity.attachComponent(createInputComponent(comp));
 			}
 			
-			for each(comp in xml.triggerComponent) {
-				entity.attachComponent(createTriggerComponent(comp));
+			for each(comp in xml.zoneComponent) {
+				entity.attachComponent(createZoneComponent(comp));
 			}
 			
 			for each(comp in xml.navigationComponent[0]) {
@@ -90,8 +89,22 @@ package engine.core {
 			return null;
 		}
 		
-		static private function createTriggerComponent(xml:XML):TriggerComponent {
-			return null;
+		static private function createZoneComponent(xml:XML):ZoneComponent {
+			var comp:ZoneComponent = new ZoneComponent();
+			
+			var zoneType:String = xml.zone.@type;
+			
+			switch (zoneType) {
+				case "circle":
+					comp.zone = new CircleZone(xml.zone.@radius);
+					break;
+					
+				case "rect":
+					// TODO - rectangle zone loading
+					break;
+			}
+			
+			return comp;
 		}
 		
 		static private function createNavigationComponent(type:String):NavigationComponent {
@@ -101,6 +114,25 @@ package engine.core {
 			return null;
 		}
 
+		static public function createTrigger(entities:Vector.<Entity>, xml:XML):Trigger {
+			var trigger:Trigger = new Trigger();
+			
+			var data:String;
+			var entitiesNum:int = entities.length;
+			var i:int;
+			
+			for each (data in xml.zone) {
+				for (i = 0; i < entitiesNum; i++) {
+					if (entities[i].id == data)
+						trigger.addZone(entities[i].getComponentByClass(ZoneComponent));
+				}
+			}
+			
+			for each (data in xml.signal)
+				trigger.signal = data;
+				
+			return trigger;
+		}
 	}
 
 }

@@ -2,6 +2,7 @@ package engine.loaders {
 	import engine.core.Entity;
 	import engine.core.Factory;
 	import engine.render.Layer;
+	import engine.trigger.Trigger;
 	import flash.geom.Point;
 	import flash.utils.ByteArray;
 
@@ -39,6 +40,17 @@ package engine.loaders {
 				entities.push(Factory.createEntity(entityData, entityData.parent().@id));
 			
 			return entities;
+		}
+		
+		static public function loadTriggers(entities:Vector.<Entity>):Vector.<Trigger> {
+			var triggers:Vector.<Trigger> = new Vector.<Trigger>();
+			
+			var triggerData:XML;
+			for each(triggerData in _xml.triggers.trigger) {
+				triggers.push(Factory.createTrigger(entities, triggerData));
+			}
+			
+			return triggers;
 		}
 
 	}

@@ -24,7 +24,10 @@ package engine.core {
 		}
 		
 		public function dispatchSignal(id:String, ...params):void {
-			Signal(getSignal(id)).dispatch(params);
+			if (params.length)
+				Signal(getSignal(id)).dispatch(params);
+			else
+				Signal(getSignal(id)).dispatch();
 		}
 
 	}
